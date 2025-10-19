@@ -1,0 +1,11 @@
+node_modules/
+cats.db
+.env
+playwright-report/
+test-results/
+*.log
+/.azure
+/.azd
+coverage/
+*.sqlite
+*.db-journal

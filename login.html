@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Katzenfutter-Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login-btn {
+            padding: 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: #5568d3;
+        }
+
+        .error-message {
+            background: #ff4757;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        .default-credentials {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .default-credentials strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1 class="login-title">🐱 Anmelden</h1>
+        
+        <div id="errorMessage" class="error-message" data-testid="error-message"></div>
+        
+        <form class="login-form" onsubmit="handleLogin(event)" data-testid="login-form">
+            <div class="form-group">
+                <label for="username">Benutzername</label>
+                <input type="text" id="username" name="username" required autofocus data-testid="input-username">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Passwort</label>
+                <input type="password" id="password" name="password" required data-testid="input-password">
+            </div>
+            
+            <button type="submit" class="login-btn" data-testid="btn-login">Anmelden</button>
+        </form>
+    </div>
+
+    <script>
+        // Check if already logged in
+        async function checkAuth() {
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/status', {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (data.authenticated) {
+                    window.location.href = '/app';
+                }
+            } catch (error) {
+                console.error('Fehler beim Überprüfen der Authentifizierung:', error);
+            }
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('errorMessage');
+
+            try {
+                const response = await fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    window.location.href = '/app';
+                } else {
+                    errorDiv.textContent = data.error || 'Anmeldung fehlgeschlagen';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Fehler:', error);
+                errorDiv.textContent = 'Verbindungsfehler. Bitte versuchen Sie es erneut.';
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // Check authentication on page load
+        checkAuth();
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+name: cat-food-tracker
+metadata:
+  template: azd-init@1.9.5
+workflows:
+  up:
+    steps:
+      - azd: provision
+      - azd: deploy
+services:
+  web:
+    project: .
+    language: js
+    host: appservice

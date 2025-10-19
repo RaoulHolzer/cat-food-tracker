@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katzenfutter-Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+                <h1 style="margin-bottom: 0;">🐱 Katzenfutter-Tracker</h1>
+                <p class="subtitle" style="margin-bottom: 0;">Angemeldet als: <strong id="usernameDisplay" data-testid="username-display"></strong></p>
+            </div>
+            <button onclick="logout()" style="background: #ff4757;" data-testid="btn-logout">Abmelden</button>
+        </div>
+        <p class="subtitle">Behalten Sie den Überblick über die Fütterungszeiten Ihrer Katzen</p>
+
+        <div class="add-cat-section">
+            <h2 style="margin-bottom: 15px; color: #333;">Neue Katze hinzufügen</h2>
+            <div class="input-group">
+                <input type="text" id="catNameInput" placeholder="Katzennamen eingeben..." data-testid="input-cat-name" />
+                <button onclick="addCat()" data-testid="btn-add-cat">Katze hinzufügen</button>
+            </div>
+        </div>
+
+        <div id="catsList" class="cats-list" data-testid="cats-list"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

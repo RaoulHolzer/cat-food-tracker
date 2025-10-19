@@ -1,0 +1,28 @@
+{
+  "name": "margot",
+  "version": "1.0.0",
+  "description": "Katzenfutter Tracker App",
+  "main": "app.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "npx playwright test",
+    "test:e2e": "npx playwright test",
+    "test:report": "npx playwright show-report"
+  },
+  "keywords": ["cats", "feeding", "tracker", "express", "sqlite"],
+  "author": "Raoul Holzer",
+  "license": "MIT",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1"
+  }
+}
