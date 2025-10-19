@@ -3,9 +3,13 @@ const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
+require('dotenv').config(); // Load environment variables
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const SESSION_SECRET = process.env.SESSION_SECRET || 'dev-insecure-change-me';
+const APP_USERNAME = process.env.APP_USERNAME || 'margot';
+const APP_PASSWORD = process.env.APP_PASSWORD || 'margot';
 
 // Middleware
 app.use(cors({
@@ -16,7 +20,7 @@ app.use(express.json());
 
 // Session middleware
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'margot-secret-key-change-in-production',
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -69,11 +73,11 @@ function requireAuth(req, res, next) {
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
     
-    // Simple authentication - username: margot, password: margot
-    if (username === 'margot' && password === 'margot') {
+    // Simple authentication using environment variables APP_USERNAME / APP_PASSWORD
+    if (username === APP_USERNAME && password === APP_PASSWORD) {
         req.session.userId = 1;
-        req.session.username = 'margot';
-        res.json({ success: true, username: 'margot' });
+        req.session.username = APP_USERNAME;
+        res.json({ success: true, username: APP_USERNAME });
     } else {
         res.status(401).json({ error: 'Ungültiger Benutzername oder Passwort' });
     }
