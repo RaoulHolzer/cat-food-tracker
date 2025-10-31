@@ -242,11 +242,130 @@ async function renderCats() {
     }).join('');
 }
 
+// Load can purchases
+async function loadCanPurchases() {
+    try {
+        const response = await fetch(`${API_URL}/can-purchases`, {
+            credentials: 'include'
+        });
+        if (response.status === 401) {
+            window.location.href = '/';
+            return { purchases: [] };
+        }
+        if (!response.ok) throw new Error('Fehler beim Laden der Dosenkäufe');
+        return await response.json();
+    } catch (error) {
+        console.error('Fehler:', error);
+        return { purchases: [] };
+    }
+}
+
+// Add a can purchase
+async function addCanPurchase() {
+    const quantityInput = document.getElementById('canQuantityInput');
+    const notesInput = document.getElementById('canNotesInput');
+    const quantity = parseInt(quantityInput.value);
+    const notes = notesInput.value.trim();
+    
+    if (!quantity || quantity <= 0) {
+        alert('Bitte geben Sie eine gültige Anzahl Dosen ein!');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/can-purchases`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ 
+                quantity,
+                notes: notes || null,
+                purchase_date: new Date().toISOString()
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            alert(error.error || 'Fehler beim Hinzufügen des Dosenkaufs');
+            return;
+        }
+
+        quantityInput.value = '';
+        notesInput.value = '';
+        await renderCanPurchases();
+    } catch (error) {
+        console.error('Fehler:', error);
+        alert('Fehler beim Hinzufügen des Dosenkaufs');
+    }
+}
+
+// Delete a can purchase
+async function deleteCanPurchase(id) {
+    if (!confirm('Sind Sie sicher, dass Sie diesen Dosenkauf löschen möchten?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/can-purchases/${id}`, {
+            method: 'DELETE',
+            credentials: 'include'
+        });
+
+        if (!response.ok) throw new Error('Fehler beim Löschen');
+
+        await renderCanPurchases();
+    } catch (error) {
+        console.error('Fehler:', error);
+        alert('Fehler beim Löschen des Dosenkaufs');
+    }
+}
+
+// Render can purchases
+async function renderCanPurchases() {
+    const data = await loadCanPurchases();
+    const container = document.getElementById('canPurchasesList');
+
+    if (!data.purchases || data.purchases.length === 0) {
+        container.innerHTML = '';
+        return;
+    }
+
+    const totalCans = data.purchases.reduce((sum, purchase) => sum + purchase.quantity, 0);
+
+    container.innerHTML = `
+        <div class="can-purchases-card">
+            <div class="can-purchases-header">
+                <h3>📦 Dosenkäufe</h3>
+                <div class="total-cans">Gesamt gekauft: <strong>${totalCans} Dosen</strong></div>
+            </div>
+            <div class="purchases-list">
+                ${data.purchases.map(purchase => `
+                    <div class="purchase-entry">
+                        <div class="purchase-info">
+                            <span class="purchase-quantity">${purchase.quantity} Dosen</span>
+                            ${purchase.notes ? `<span class="purchase-notes">${purchase.notes}</span>` : ''}
+                            <div class="purchase-date">${formatTimestamp(purchase.purchase_date)}</div>
+                        </div>
+                        <button class="delete-purchase" onclick="deleteCanPurchase(${purchase.id})">×</button>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
 // Add event listener for Enter key
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
     document.getElementById('catNameInput').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') addCat();
     });
+    document.getElementById('canQuantityInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addCanPurchase();
+    });
+    document.getElementById('canNotesInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addCanPurchase();
+    });
     renderCats();
+    renderCanPurchases();
 });

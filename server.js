@@ -58,6 +58,13 @@ function initDatabase() {
         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (cat_id) REFERENCES cats(id) ON DELETE CASCADE
     )`);
+
+    db.run(`CREATE TABLE IF NOT EXISTS can_purchases (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        quantity INTEGER NOT NULL,
+        purchase_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+        notes TEXT
+    )`);
 }
 
 // Authentication middleware
@@ -202,6 +209,49 @@ app.delete('/api/feedings/:id', requireAuth, (req, res) => {
             return res.status(500).json({ error: err.message });
         }
         res.json({ message: 'Fütterung gelöscht', changes: this.changes });
+    });
+});
+
+// Get all can purchases
+app.get('/api/can-purchases', requireAuth, (req, res) => {
+    db.all('SELECT * FROM can_purchases ORDER BY purchase_date DESC', (err, purchases) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json({ purchases });
+    });
+});
+
+// Add a can purchase
+app.post('/api/can-purchases', requireAuth, (req, res) => {
+    const { quantity, notes, purchase_date } = req.body;
+
+    if (!quantity || quantity <= 0) {
+        return res.status(400).json({ error: 'Menge ist erforderlich und muss größer als 0 sein' });
+    }
+
+    const purchaseDate = purchase_date || new Date().toISOString();
+
+    db.run('INSERT INTO can_purchases (quantity, notes, purchase_date) VALUES (?, ?, ?)', 
+        [quantity, notes || null, purchaseDate], 
+        function(err) {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+            res.json({ id: this.lastID, quantity, notes, purchase_date: purchaseDate });
+        }
+    );
+});
+
+// Delete a can purchase
+app.delete('/api/can-purchases/:id', requireAuth, (req, res) => {
+    const { id } = req.params;
+
+    db.run('DELETE FROM can_purchases WHERE id = ?', [id], function(err) {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json({ message: 'Dosenkauf gelöscht', changes: this.changes });
     });
 });
 

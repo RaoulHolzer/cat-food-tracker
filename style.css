@@ -207,3 +207,108 @@ button:hover {
     font-size: 0.9em;
     color: #666;
 }
+
+/* Can Purchases Styles */
+.can-purchases-section {
+    margin-bottom: 30px;
+}
+
+.can-purchases-card {
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.can-purchases-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.can-purchases-header h3 {
+    font-size: 1.3em;
+    color: #333;
+    margin: 0;
+}
+
+.total-cans {
+    font-size: 1.1em;
+    color: #667eea;
+}
+
+.total-cans strong {
+    font-size: 1.2em;
+}
+
+.purchases-list {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.purchase-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.purchase-entry:last-child {
+    margin-bottom: 0;
+}
+
+.purchase-info {
+    flex: 1;
+}
+
+.purchase-quantity {
+    font-weight: bold;
+    color: #667eea;
+    font-size: 1.1em;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.purchase-notes {
+    color: #666;
+    font-size: 0.95em;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.purchase-date {
+    color: #999;
+    font-size: 0.85em;
+}
+
+.delete-purchase {
+    background: #ff6b6b;
+    padding: 4px 10px;
+    font-size: 16px;
+    min-width: 30px;
+}
+
+.delete-purchase:hover {
+    background: #ff4757;
+}
+
+input[type="number"] {
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input[type="number"]:focus {
+    outline: none;
+    border-color: #667eea;
+}

@@ -25,6 +25,17 @@
             </div>
         </div>
 
+        <div class="add-cat-section" style="margin-top: 30px;">
+            <h2 style="margin-bottom: 15px; color: #333;">🥫 Dosenkauf erfassen</h2>
+            <div class="input-group">
+                <input type="number" id="canQuantityInput" placeholder="Anzahl Dosen" min="1" data-testid="input-can-quantity" style="flex: 0 0 150px;" />
+                <input type="text" id="canNotesInput" placeholder="Notizen (optional)" data-testid="input-can-notes" />
+                <button onclick="addCanPurchase()" data-testid="btn-add-can-purchase">Dosenkauf hinzufügen</button>
+            </div>
+        </div>
+
+        <div id="canPurchasesList" class="can-purchases-section" data-testid="can-purchases-list"></div>
+
         <div id="catsList" class="cats-list" data-testid="cats-list"></div>
     </div>
 
