@@ -33,7 +33,6 @@ test('Add and delete can purchases', async ({ page }) => {
   await page.click('[data-testid="btn-add-can-purchase"]');
 
   // Wait for update and verify total
-  await page.waitForTimeout(1000);
   await expect(canPurchasesCard.locator('.total-cans strong')).toContainText('36 Dosen');
   await expect(page.locator('.purchase-entry')).toHaveCount(2);
 
@@ -42,7 +41,6 @@ test('Add and delete can purchases', async ({ page }) => {
   await page.locator('.purchase-entry').first().locator('.delete-purchase').click();
   
   // Verify total is updated
-  await page.waitForTimeout(1000);
   await expect(canPurchasesCard.locator('.total-cans strong')).toContainText('12 Dosen');
   await expect(page.locator('.purchase-entry')).toHaveCount(1);
 });

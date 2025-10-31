@@ -279,8 +279,7 @@ async function addCanPurchase() {
             credentials: 'include',
             body: JSON.stringify({ 
                 quantity,
-                notes: notes || null,
-                purchase_date: new Date().toISOString()
+                notes: notes || null
             })
         });
 
